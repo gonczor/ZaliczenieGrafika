@@ -22,9 +22,21 @@ void Program::attachAndLink()
 
 void Program::use()
 {
-	if (checkProgramStatus()) {
+	if (checkProgramStatus()) 
+	{
 		glUseProgram(m_programID);
 	}
+}
+
+void Program::setColorOfShape(const char * variableName, glm::vec3 color)
+{
+
+	GLint location = glGetUniformLocation(m_programID, variableName);
+	if (location == -1)
+	{
+		return;
+	}
+	glUniform3fv(location, 1, &color[0]);
 }
 
 bool Program::checkProgramStatus()
@@ -45,5 +57,6 @@ bool Program::checkProgramStatus()
 		delete[] buffer;
 		return false;
 	}
+
 	return true;
 }

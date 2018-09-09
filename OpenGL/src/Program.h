@@ -1,6 +1,6 @@
 #pragma once
 #include <Shader.h>
-
+#include <glm\glm.hpp>
 class Program
 {
 public:
@@ -8,7 +8,8 @@ public:
 	~Program();
 	void attachAndLink();
 	void use();
-
+	
+	void setColorOfShape(const char* variableName, glm::vec3 color);
 
 private:
 	bool checkProgramStatus();

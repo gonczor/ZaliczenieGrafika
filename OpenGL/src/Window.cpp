@@ -4,13 +4,14 @@
 #include <memory>
 #include <VertexBuffer.h>
 #include <Program.h>
+#include <Shape.h>
+#include <SolidSphere.h>
+#include <IndexBuffer.h>
 
 
 Window::Window(unsigned int widht, unsigned int height)
 	:m_widht(widht), m_height(height)
-{
-
-}
+{}
 
 Window::~Window()
 {
@@ -45,10 +46,13 @@ int Window::initWindow()
 		+0.5f, -0.5f
 	};
 
-	std::shared_ptr<VertexBuffer> object = std::make_shared<VertexBuffer>(vertices, 6);
+	std::shared_ptr<Shape> sphere = std::make_shared<SolidSphere>(5, 1);
+	sphere->generate();
+
+	std::shared_ptr<VertexBuffer> object = std::make_shared<VertexBuffer>(vertices, 6*sizeof(GLfloat));
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2, 0);
-	
+	//
 	std::string vertexPath = "resources/shaders/vertex_shader.glsl";
 	std::string fragmentPath = "resources/shaders/fragment_shader.glsl";
 
@@ -60,13 +64,16 @@ int Window::initWindow()
 	Program program(shader);
 	program.attachAndLink();
 	program.use();
+	program.setColorOfShape("u_Color", glm::vec3(0.2f, 0.7f, 1.0f));
 
+	
 
+	float r = 0.5f;
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(1.0f, 0.5f, 0.5f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(0.2f, 0.5f, 0.5f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 

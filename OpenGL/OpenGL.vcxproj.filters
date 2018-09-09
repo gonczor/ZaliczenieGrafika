@@ -7,6 +7,8 @@
     <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\Program.cpp" />
+    <ClCompile Include="src\Shape.cpp" />
+    <ClCompile Include="src\SolidSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\IndexBuffer.h" />
@@ -14,6 +16,8 @@
     <ClInclude Include="src\VertexBuffer.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\Program.h" />
+    <ClInclude Include="src\Shape.h" />
+    <ClInclude Include="src\SolidSphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\vertex_shader.glsl" />

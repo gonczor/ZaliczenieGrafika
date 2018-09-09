@@ -32,8 +32,6 @@ void Shader::compile()
 	const char * vertexShaderCode = shaderSourceCode.vertex.c_str();
 	const char * fragmentShaderCode = shaderSourceCode.fragment.c_str();
 
-	std::cout << vertexShaderCode << fragmentShaderCode << std::endl;
-
 	m_vertexShaderID = complieEachShader(GL_VERTEX_SHADER, vertexShaderCode);
 	m_fragmentShaderID = complieEachShader(GL_FRAGMENT_SHADER, fragmentShaderCode);
 }
