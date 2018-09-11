@@ -97,7 +97,7 @@ int Window::initWindow()
 		glm::radians(45.0f),
 		static_cast<GLfloat>(m_widht) / static_cast<GLfloat>(m_height),
 		0.1f,
-		10.0f
+		100.0f
 	);
 
 
