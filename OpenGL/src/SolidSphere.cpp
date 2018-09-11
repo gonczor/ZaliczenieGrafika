@@ -17,8 +17,6 @@ SolidSphere::~SolidSphere()
 
 void SolidSphere::generate()
 {
-	static int count = 0;
-
 	for (unsigned int ring = 0; ring < m_size; ++ring)
 	{
 		
@@ -31,20 +29,30 @@ void SolidSphere::generate()
 			GLfloat z = m_radius * glm::cos(lontitiude);
 
 			m_vertecies.emplace_back(glm::vec3(x, y, z));
-			count++;
 		}
 	}
 	
-	for (unsigned int ring = 0; ring < (m_size * m_size) - m_size; ++ring)
+	for (unsigned int ring = 0; ring < (m_size * m_size) - m_size - 1; ++ring)
 	{
-		m_indicies.push_back(ring);
-		m_indicies.push_back(ring + 1);
-		m_indicies.push_back(ring + m_size);
+		if (ring == 0)
+		{
+			m_indicies.emplace_back(0);
+			m_indicies.emplace_back(1);
+			m_indicies.emplace_back(m_size);
 
-		m_indicies.push_back(ring + 1);
-		m_indicies.push_back(ring + m_size);
-		m_indicies.push_back(ring + m_size + 1);
+			m_indicies.emplace_back(1);
+			m_indicies.emplace_back(m_size);
+			m_indicies.emplace_back(m_size + 1);
+		}
+		for (unsigned int i = 0; i < 6; ++i)
+		{
+			m_indicies.emplace_back(m_indicies[i] + ring);
+		}
+
+		
 	}
+	std::cout << m_vertecies.size() << std::endl;
+	std::cout << m_indicies.size() << std::endl;
 }
 
 GLfloat SolidSphere::map(GLfloat value, GLfloat low1, GLfloat max1, GLfloat low2, GLfloat max2)

@@ -48,7 +48,7 @@ int Window::initWindow()
 		+1.0f, -1.0f
 	};
 
-	std::shared_ptr<Shape> sphere = std::make_shared<SolidSphere>(20, 1.0f);
+	std::shared_ptr<Shape> sphere = std::make_shared<SolidSphere>(50, 1.0f);
 	sphere->generate();
 
 	std::shared_ptr<VertexBuffer> vbo = std::make_shared<VertexBuffer>(&sphere->m_vertecies[0], sphere->m_vertecies.size() * sizeof(Vertex));
@@ -71,7 +71,7 @@ int Window::initWindow()
 	program.attachAndLink();
 	program.use();
 
-	program.setColorOfShape("u_Color", glm::vec3(1.0f, 0.0f, 1.0f));
+	program.setColorOfShape("u_Color", glm::vec3(0.0f, 0.0f, 0.0f));
 
 	//glm::mat4 translation = glm::translate(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.0f));
 	//glm::mat4 rotation = glm::rotate(glm::mat4(), (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -85,34 +85,48 @@ int Window::initWindow()
 	//std::cout << vec.x << vec.y << vec.z << std::endl;
 
 
-	glm::mat4 Model = glm::mat4(1.0f);
+	//glm::mat4 Model = glm::mat4(1.0f);
 
-	glm::mat4 View = glm::lookAt(
-		glm::vec3(2, 1, 1),
-		glm::vec3(0, 0, 0),
-		glm::vec3(0, 1, 0)
-	);
+	//glm::mat4 View = glm::lookAt(
+	//	glm::vec3(2, 1, 1),
+	//	glm::vec3(0, 0, 0),
+	//	glm::vec3(0, 1, 0)
+	//);
 
-	glm::mat4 Projection = glm::perspective(
-		glm::radians(45.0f),
-		static_cast<GLfloat>(m_widht) / static_cast<GLfloat>(m_height),
-		0.1f,
-		100.0f
-	);
+	//glm::mat4 Translation = glm::translate(Model, glm::vec3(0.1f, 0.0f, 0.0f));
 
+	//glm::mat4 Projection = glm::perspective(
+	//	glm::radians(45.0f),
+	//	static_cast<GLfloat>(m_widht) / static_cast<GLfloat>(m_height),
+	//	0.1f,
+	//	100.0f
+	//);
+	//glm::mat4 trans(1.0f);
+	//trans = glm::rotate(
+	//	trans,
+	//	static_cast<GLfloat>(glfwGetTime()), 
+	//	glm::vec3(0.0, 1.0, 1.0));
+	//trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 
-	glm::mat4 u_MVP = Projection * View * Model;
+	////glm::mat4 u_MVP = Projection * Translation * View * Model;
 
-	program.setTranslation("MVP", u_MVP);
-	
-	float r = 0.5f;
-
+	//program.setTranslation("MVP", trans);
+	//
+	//float r = 0.5f;
+	glPointSize(5.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.0f, 0.6f, 1.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		
+		glm::mat4 trans(1.0f);
+		trans = glm::rotate(
+			trans,
+			static_cast<GLfloat>(glfwGetTime()),
+			glm::vec3(0.0, 1.0, 1.0));
+		trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+		program.setTranslation("MVP", trans);
+
 
 		glDrawElements(GL_LINES, sphere->m_indicies.size(), GL_UNSIGNED_SHORT, 0);
 
