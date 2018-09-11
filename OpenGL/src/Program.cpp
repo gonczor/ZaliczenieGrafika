@@ -1,5 +1,5 @@
 #include "Program.h"
-
+#include <glm/gtc/type_ptr.hpp>
 
 
 Program::Program(Shader &shader)
@@ -39,6 +39,17 @@ void Program::setColorOfShape(const char * variableName, glm::vec3 color)
 	glUniform3fv(location, 1, &color[0]);
 }
 
+void Program::setTranslation(const char * variableName, glm::mat4 translation)
+{
+
+	GLuint location = glGetUniformLocation(m_programID, variableName);
+	if (location == -1)
+	{
+		return;
+	}
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(translation));
+}
+
 bool Program::checkProgramStatus()
 {
 	GLint linkStatus;
@@ -59,4 +70,10 @@ bool Program::checkProgramStatus()
 	}
 
 	return true;
+}
+
+
+GLuint Program::getProgramID()
+{
+	return m_programID;
 }

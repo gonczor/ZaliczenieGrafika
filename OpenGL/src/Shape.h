@@ -12,7 +12,7 @@ struct Vertex
 
 	friend std::ostream& operator << (std::ostream &os, const Vertex &obj)
 	{
-		os << obj.position.x << " " << obj.position.y << " " << obj.position.z << '\n';
+		os << "x: " << obj.position.x << " y: " << obj.position.y << " z: " << obj.position.z << '\n';
 		return os;
 	}
 };
@@ -26,6 +26,8 @@ public:
 
 	virtual ~Shape();
 	virtual void generate() = 0;
+
+	friend class Window;
 	
 
 protected:
