@@ -1,25 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Pliki źródłowe">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Pliki nagłówkowe">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Pliki zasobów">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{db8eb5e0-84f2-42a3-811d-9613cdb3b4cb}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\VertexBuffer.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Program.cpp" />
+    <ClCompile Include="src\Shape.cpp" />
+    <ClCompile Include="src\SolidSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
+    <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\VertexBuffer.h" />
+    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Program.h" />
+    <ClInclude Include="src\Shape.h" />
+    <ClInclude Include="src\SolidSphere.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\vertex_shader.glsl" />
+    <None Include="resources\shaders\fragment_shader.glsl" />
   </ItemGroup>
 </Project>
