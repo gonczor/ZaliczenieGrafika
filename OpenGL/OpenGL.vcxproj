@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Conditions.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="src\Conditions.cpp" />
+    <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\SolidSphere.cpp" />
     <ClCompile Include="src\Shape.cpp" />
     <ClCompile Include="src\Program.cpp" />
@@ -29,6 +33,13 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Conditions.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="src\Conditions.h" />
+    <ClInclude Include="src\Keyboard.h" />
     <ClInclude Include="src\SolidSphere.h" />
     <ClInclude Include="src\Shape.h" />
     <ClInclude Include="src\Program.h" />

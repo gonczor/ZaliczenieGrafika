@@ -9,6 +9,10 @@
     <ClCompile Include="src\Program.cpp" />
     <ClCompile Include="src\Shape.cpp" />
     <ClCompile Include="src\SolidSphere.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Conditions.cpp" />
+    <ClCompile Include="src\Conditions.cpp" />
+    <ClCompile Include="src\Keyboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\IndexBuffer.h" />
@@ -18,6 +22,10 @@
     <ClInclude Include="src\Program.h" />
     <ClInclude Include="src\Shape.h" />
     <ClInclude Include="src\SolidSphere.h" />
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Conditions.h" />
+    <ClInclude Include="src\Conditions.h" />
+    <ClInclude Include="src\Keyboard.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\vertex_shader.glsl" />

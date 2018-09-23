@@ -12,7 +12,10 @@
 
 Window::Window(unsigned int widht, unsigned int height)
 	:m_widht(widht), m_height(height)
-{}
+{
+	conditions = new Conditions();
+	keyboard = new Keyboard(conditions);
+}
 
 Window::~Window()
 {
@@ -39,6 +42,8 @@ int Window::initWindow()
 		std::cerr << "GLEW Error\n";
 		return -1;
 	}
+
+	glfwSetKeyCallback(window, this->getKeyboardOnKeyPressed);
 
 	std::cout << glGetString(GL_VERSION) << '\n';
 
@@ -114,17 +119,23 @@ int Window::initWindow()
 	//
 	//float r = 0.5f;
 	glPointSize(5.0f);
-
+	glm::mat4 trans(1.0f);
+	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+	glm::vec3 move(0.0f, 0.0f, 0.02f);
 	while (!glfwWindowShouldClose(window))
 	{
+		this->printConditions();
 		glClearColor(0.0f, 0.6f, 1.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		glm::mat4 trans(1.0f);
-		trans = glm::rotate(
+		
+
+		trans = glm::translate(trans, -move);
+		trans += glm::rotate(
 			trans,
-			static_cast<GLfloat>(glfwGetTime()),
-			glm::vec3(0.0, 1.0, 1.0));
-		trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+			0.1f,
+			glm::vec3(0.0, 1.0, 1.0)
+		);
+		
 		program.setTranslation("MVP", trans);
 
 
@@ -135,4 +146,14 @@ int Window::initWindow()
 		glfwPollEvents();
 	}
 	return 0;
+}
+
+void * Window::getKeyboardOnKeyPressed()
+{
+	return this->keyboard->onKeyPressed;
+}
+
+void Window::printConditions()
+{
+	std::cout << "T: " << this->conditions->getTemperature() << "\tP: " << this->conditions->getPressure() << std::endl;
 }
