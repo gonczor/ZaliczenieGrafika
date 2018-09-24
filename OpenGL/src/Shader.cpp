@@ -15,17 +15,6 @@ Shader::~Shader()
 	glDeleteShader(m_fragmentShaderID);
 }
 
-//std::string Shader::loadShader(std::string filepath) const
-//{
-//	std::ifstream shaderInput(filepath);
-//
-//	if (!shaderInput.good())
-//	{
-//		std::cout << "Unable to load file: " << filepath << '\n';
-//	}
-//
-//	return { std::istreambuf_iterator<char>(shaderInput), std::istreambuf_iterator<char>() };
-//}
 
 void Shader::compile()
 {

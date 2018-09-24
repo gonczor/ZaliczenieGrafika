@@ -2,25 +2,31 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-Program::Program(Shader &shader)
-	:m_programID(glCreateProgram()), m_shader(shader)
-{}
 
+ShaderProgram::ShaderProgram(std::string vertexpath, std::string fragmentpath)
+	:m_programID(glCreateProgram())
+{
+	ShaderSourceCode source = ShaderSourceCode::loadShaderCode(vertexpath, fragmentpath);
+	Shader shader(source);
+	shader.compile();
+	attachAndLink(shader);
+	use();
+}
 
-Program::~Program()
+ShaderProgram::~ShaderProgram()
 {
 	glDeleteProgram(m_programID);
 }
 
-void Program::attachAndLink()
+void ShaderProgram::attachAndLink(const Shader &shader)
 {
-	glAttachShader(m_programID, m_shader.getVertexShader());
-	glAttachShader(m_programID, m_shader.getFragmentShader());
+	glAttachShader(m_programID, shader.getVertexShader());
+	glAttachShader(m_programID, shader.getFragmentShader());
 	glLinkProgram(m_programID);
 }
 
 
-void Program::use()
+void ShaderProgram::use()
 {
 	if (checkProgramStatus()) 
 	{
@@ -28,7 +34,17 @@ void Program::use()
 	}
 }
 
-void Program::setColorOfShape(const char * variableName, glm::vec3 color)
+void ShaderProgram::setUniform1i(const char * variableName, GLint value)
+{
+	GLint location = glGetUniformLocation(m_programID, variableName);
+	if (location == -1)
+	{
+		return;
+	}
+	glUniform1i(location, value);
+}
+
+void ShaderProgram::setUniform3fv(const char * variableName, glm::vec3 color)
 {
 
 	GLint location = glGetUniformLocation(m_programID, variableName);
@@ -39,10 +55,10 @@ void Program::setColorOfShape(const char * variableName, glm::vec3 color)
 	glUniform3fv(location, 1, &color[0]);
 }
 
-void Program::setTranslation(const char * variableName, glm::mat4 translation)
+void ShaderProgram::setUniformMatrix4fv(const char * variableName, glm::mat4 translation)
 {
 
-	GLuint location = glGetUniformLocation(m_programID, variableName);
+	GLint location = glGetUniformLocation(m_programID, variableName);
 	if (location == -1)
 	{
 		return;
@@ -50,7 +66,7 @@ void Program::setTranslation(const char * variableName, glm::mat4 translation)
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(translation));
 }
 
-bool Program::checkProgramStatus()
+bool ShaderProgram::checkProgramStatus()
 {
 	GLint linkStatus;
 	glGetProgramiv(m_programID, GL_LINK_STATUS, &linkStatus);
@@ -63,6 +79,7 @@ bool Program::checkProgramStatus()
 		GLsizei bufferSize;
 		glGetShaderInfoLog(m_programID, infoLogLength, &bufferSize, buffer);
 
+		std::cout << "Link error\n";
 		std::cout << buffer << '\n';
 
 		delete[] buffer;
@@ -73,7 +90,7 @@ bool Program::checkProgramStatus()
 }
 
 
-GLuint Program::getProgramID()
+GLuint ShaderProgram::getProgramID()
 {
 	return m_programID;
 }

@@ -14,6 +14,11 @@ public:
 	int initWindow();
 
 private:
+	bool initGLFW();
+	bool initOpengl();
+	void pushDataToBuffer();
+
+private:
 	unsigned int m_widht = 0;
 	unsigned int m_height = 0;
 	GLFWwindow* window = nullptr;

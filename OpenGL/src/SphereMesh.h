@@ -1,19 +1,18 @@
 #pragma once
 #include "Shape.h"
 
-class SolidSphere :public Shape
+class SphereMesh :public Shape
 {
 public:
-	SolidSphere(GLuint size, GLfloat radius);
-	~SolidSphere();
+	SphereMesh(GLuint rings, GLuint sectors, GLfloat radius);
+	~SphereMesh();
 	void generate();
-
 
 private:
 	GLfloat map(GLfloat value, GLfloat low1, GLfloat max1, GLfloat low2, GLfloat max2);
-
+	
 private:
-	GLuint m_rings;
+	GLuint m_sectors;
 	GLfloat m_radius;
 };
 

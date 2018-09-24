@@ -21,19 +21,22 @@ class Shape
 {
 public:
 	Shape(GLuint size);
-	Shape(const Shape& other) = delete;
-	Shape(Shape&& other) = delete;
 
 	virtual ~Shape();
 	virtual void generate() = 0;
+	
+	virtual const std::vector<Vertex>& getVertexBufferData() const;
+	virtual const std::vector<GLushort>& getIndexBufferData() const;
 
-	friend class Window;
+	virtual GLsizei getVertexBufferSize() const;
+	virtual GLsizei getIndexBufferSize() const;
 	
 
 protected:
-	GLuint m_size;
+	GLsizei m_size;
 	std::vector<Vertex> m_vertecies;
 	std::vector<GLushort> m_indicies;
+	std::vector<glm::vec2> m_texcords;
 
 };
 

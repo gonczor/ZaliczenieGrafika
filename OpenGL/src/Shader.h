@@ -13,7 +13,7 @@ struct ShaderSourceCode
 class Shader
 {
 public:
-	friend class Program;
+	friend class ShaderProgram;
 	Shader(const ShaderSourceCode &sourceCode);
 	Shader(const Shader& other) = delete;
 	Shader(Shader&& other) = delete;
