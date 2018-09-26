@@ -15,6 +15,8 @@ private:
 	glm::vec3 position;
 	glm::vec3 viewDirection;
 	glm::vec2 oldMousePosition;
+	float speed;
+
 	const glm::vec3 UP;
 };
 

@@ -1,6 +1,9 @@
 #pragma once
 #include <Shader.h>
 #include <glm\glm.hpp>
+
+#include <map>
+
 class ShaderProgram
 {
 public:
@@ -9,17 +12,18 @@ public:
 	void attachAndLink(const Shader& shader);
 	void use();
 
-	void setUniform1i(const char * variableName, GLint value);
-	void setUniform3fv(const char* variableName, glm::vec3 color);
-	void setUniformMatrix4fv(const char * variableName, glm::mat4 translation);
+	void setUniform(const char * variableName, const GLint& value);
+	void setUniform(const char* variableName, const glm::vec3& color);
+	void setUniform(const char * variableName, const glm::mat4& translation);
 
 	GLuint getProgramID();
 
-
 private:
 	bool checkProgramStatus();
+	GLint getUniformLocation(const char* variableName);
 
 private:
 	GLuint m_programID = 0;
+	std::map<std::string, int> m_uniformsLocations;
 };
 

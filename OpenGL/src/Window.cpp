@@ -39,15 +39,20 @@ int Window::initWindow()
 		std::cerr << "GLEW Error\n";
 		return -1;
 	}
+
+	// chyba vsync :D
+	glfwSwapInterval(1);
+
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
 	std::cout << glGetString(GL_VERSION) << '\n';
 
-	SphereMesh sphere(10, 10, 0.2f);
+	SphereMesh sphere(10, 10, 1.5f);
 	sphere.generate();
 
-	Render render(1000, sphere);
+	Render render(2, sphere);
 	render.pushDataToBuffer();
 
 	std::shared_ptr<Texture> tex = std::make_shared<Texture>("resources/textures/bricks.jpg");
@@ -62,7 +67,7 @@ int Window::initWindow()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, m_widht, m_height);
 
-		render.paintSpheres();
+		render.drawElements();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -80,6 +85,3 @@ bool Window::initOpengl()
 	return false;
 }
 
-void Window::pushDataToBuffer()
-{
-}

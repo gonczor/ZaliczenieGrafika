@@ -10,6 +10,10 @@ public:
 
 private:
 	GLfloat map(GLfloat value, GLfloat low1, GLfloat max1, GLfloat low2, GLfloat max2);
+
+	void addIndicies();
+
+	void addVertecies();
 	
 private:
 	GLuint m_sectors;

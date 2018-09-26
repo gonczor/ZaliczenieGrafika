@@ -1,6 +1,6 @@
 #include "Program.h"
 #include <glm/gtc/type_ptr.hpp>
-
+#include <iterator>
 
 
 ShaderProgram::ShaderProgram(std::string vertexpath, std::string fragmentpath)
@@ -25,7 +25,6 @@ void ShaderProgram::attachAndLink(const Shader &shader)
 	glLinkProgram(m_programID);
 }
 
-
 void ShaderProgram::use()
 {
 	if (checkProgramStatus()) 
@@ -34,35 +33,22 @@ void ShaderProgram::use()
 	}
 }
 
-void ShaderProgram::setUniform1i(const char * variableName, GLint value)
+void ShaderProgram::setUniform(const char * variableName, const GLint& value)
 {
-	GLint location = glGetUniformLocation(m_programID, variableName);
-	if (location == -1)
-	{
-		return;
-	}
+	GLint location = getUniformLocation(variableName);
 	glUniform1i(location, value);
 }
 
-void ShaderProgram::setUniform3fv(const char * variableName, glm::vec3 color)
+void ShaderProgram::setUniform(const char * variableName, const glm::vec3& color)
 {
-
-	GLint location = glGetUniformLocation(m_programID, variableName);
-	if (location == -1)
-	{
-		return;
-	}
-	glUniform3fv(location, 1, &color[0]);
+	GLint location = getUniformLocation(variableName);
+	glUniform3fv(location, 1, glm::value_ptr(color));
 }
 
-void ShaderProgram::setUniformMatrix4fv(const char * variableName, glm::mat4 translation)
+void ShaderProgram::setUniform(const char * variableName, const glm::mat4& translation)
 {
 
-	GLint location = glGetUniformLocation(m_programID, variableName);
-	if (location == -1)
-	{
-		return;
-	}
+	GLint location = getUniformLocation(variableName);
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(translation));
 }
 
@@ -89,6 +75,21 @@ bool ShaderProgram::checkProgramStatus()
 	return true;
 }
 
+
+GLint ShaderProgram::getUniformLocation(const char * variableName)
+{
+	std::map<std::string, GLint>::const_iterator it = m_uniformsLocations.find(variableName);
+	if (it != m_uniformsLocations.cend())
+	{
+		return it->second;
+	}
+	else
+	{
+		GLint location = glGetUniformLocation(m_programID, variableName);
+		m_uniformsLocations.insert(std::pair<std::string, GLint>(variableName, location));
+		return location;
+	}
+}
 
 GLuint ShaderProgram::getProgramID()
 {

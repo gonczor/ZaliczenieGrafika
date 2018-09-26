@@ -9,26 +9,19 @@ Render::Render(GLuint amount, const SphereMesh & sphereMesh) :
 	m_indexBufferData(sphereMesh.getIndexBufferData()),
 	m_vertexBufferSize(sphereMesh.getVertexBufferSize() * sizeof(m_vertexBufferData[0])),
 	m_indexBufferSize(sphereMesh.getIndexBufferSize() * sizeof(m_indexBufferData[0])),
-	shader(ShaderProgram(
+	particleShader(ShaderProgram(
 		"resources/shaders/vertex_shader.glsl",
 		"resources/shaders/fragment_shader.glsl"))
 {
-	for (int i = 0; i < m_amountObjects; ++i)
-	{
-		glm::vec3 position(
-			Particle::GenerateFloatNumber(-1.0f, 1.0f),
-			Particle::GenerateFloatNumber(-1.0f, 1.0f),
-			Particle::GenerateFloatNumber(-1.0f, 1.0f)
-		);
+	elements.emplace_back(std::make_unique<Particle>(
+		glm::vec3(10.0f, 1.0f, 1.0f), 
+		glm::vec3(-0.1f, 0.0f, 0.0f), 
+		glm::vec3(1.0f, 0.0f, 0.0f)));
 
-		glm::vec3 direction{
-			Particle::GenerateIntNumber(-10, 10),
-			Particle::GenerateIntNumber(-10, 10),
-			Particle::GenerateIntNumber(-10, 10)
-		};
-
-		particles.emplace_back(position, direction);
-	}
+	elements.emplace_back(std::make_unique<Particle>(
+		glm::vec3(0.0f, 1.0f, 1.0f),
+		glm::vec3(+0.1f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 1.0f)));
 }
 
 Render::~Render()
@@ -65,55 +58,63 @@ void Render::pushDataToBuffer()
 	);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferArrayID);
 
-	shader.setUniform1i("u_Tex", 0);
+	particleShader.setUniform("u_Tex", 0);
 }
 
 
-void Render::paintSpheres()
+GLboolean Render::detectColisions(const SimulationObject* first, const SimulationObject* second) const
 {
-	shader.use();
-	glBindVertexArray(m_sphereID);
-	static glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
-	static glm::mat4 View = glm::lookAt(
-		glm::vec3(10, 10, 10), // Camera is at (4,3,3), in World Space
-		glm::vec3(0, 0, 0), // and looks at the origin
-		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-	);
+	static GLfloat radius = 1.5f;
+	glm::vec3 firstvec = first->getPosition();
+	glm::vec3 secondvec = second->getPosition();
 
-	//glm::mat4 cubeModel1 = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, -0.5, 0.0));
-	//glm::mat4 MVP = Projection * View * cubeModel1;
-	//shader.setUniformMatrix4fv("MVP", MVP);
-	//shader.setUniform3fv("u_Color", glm::vec3(1.0, 0.5, 0.0));
-	//glDrawElements(GL_TRIANGLES, m_indexBufferData.size(), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(m_vertexBufferSize));
+	bool colisionX = checkColisionCordinates(firstvec.x, secondvec.x, radius);
+	bool colisionY = checkColisionCordinates(firstvec.y, secondvec.y, radius);
+	bool colisionZ = checkColisionCordinates(firstvec.y, secondvec.y, radius);
 
-	//glm::mat4 cubeModel2 = glm::translate(cubeModel1, glm::vec3(1.0, -1.0, 0.0));
+	return colisionX && colisionY && colisionZ;
+}
 
-	//MVP = Projection * View * cubeModel2;
-	//shader.setUniformMatrix4fv("MVP", MVP);
-	//shader.setUniform3fv("u_Color", glm::vec3(1.0, 1.0, 1.0));
-	//glDrawElements(GL_TRIANGLES, m_indexBufferData.size(), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(m_vertexBufferSize));
+GLboolean Render::checkColisionCordinates(const GLfloat& firstCordinate, const GLfloat& secondCordinate, const GLfloat& size) const
+{
+	GLboolean colision = firstCordinate + size >= secondCordinate &&
+		secondCordinate + size >= firstCordinate;
+	return colision;
+}
 
-	//glm::mat4 cubeModel3 = glm::translate(cubeModel2, glm::vec3(1.0, -1.0, 0.0));
-	//MVP = Projection * View * cubeModel3;
-	//shader.setUniformMatrix4fv("MVP", MVP);
-	//shader.setUniform3fv("u_Color", glm::vec3(1.0, 0.0, 0.0));
-	//glDrawElements(GL_TRIANGLES, m_indexBufferData.size(), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(m_vertexBufferSize));
-
-	//glm::mat4 cubeModel4 = glm::translate(cubeModel1, glm::vec3(0.0, 0.0, 3.0));
-	//MVP = Projection * View * cubeModel4;
-	//shader.setUniformMatrix4fv("MVP", MVP);
-	//shader.setUniform3fv("u_Color", glm::vec3(0.0, 0.5, 0.7));
-	//glDrawElements(GL_TRIANGLES, m_indexBufferData.size(), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(m_vertexBufferSize));
-
-	for (int i = 0; i < m_amountObjects; i++)
+void Render::doColisions()
+{
+	for (unsigned short sourceParticle = 0; sourceParticle < m_amountObjects; sourceParticle++)
 	{
-		glm::mat4 object = particles[i].getObjectModel();
-		glm::mat4 MVP = Projection * View * object;
-		shader.setUniformMatrix4fv("MVP", MVP);
-		shader.setUniform3fv("u_Color", glm::vec3(Particle::GenerateFloatNumber(0.0f, 1.0f), Particle::GenerateFloatNumber(0.0f, 1.0f), Particle::GenerateFloatNumber(0.0f, 1.0f)));
-		glDrawElements(GL_TRIANGLES, m_indexBufferData.size(), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(m_vertexBufferSize));
-		particles[i].move();
+		for (unsigned short nextParticle = 0; nextParticle < m_amountObjects; nextParticle++)
+		{
+			if (detectColisions(elements[sourceParticle].get(), elements[nextParticle].get()) && nextParticle != sourceParticle)
+			{
+				std::cout << "Colision\n";
+			}
+		}
 	}
 }
+
+
+void Render::drawElements()
+{
+	particleShader.use();
+	glm::vec3 color(1.0f, 1.0f, 0.0f);
+	for(unsigned short i = 0; i < m_amountObjects; ++i)
+	{
+		glm::mat4 object = elements[i]->getObjectModel();
+		glm::mat4 MVP = Projection * View * object;
+		particleShader.setUniform("MVP", MVP);
+		particleShader.setUniform("u_Color", elements[i]->getColor());
+		glDrawElements(GL_TRIANGLES, m_indexBufferData.size(), GL_UNSIGNED_SHORT, (void*)m_vertexBufferSize);
+		elements[i]->draw();
+	}
+	doColisions();
+}
+
+
+
+
 
 
